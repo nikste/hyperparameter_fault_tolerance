@@ -94,32 +94,27 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
             # log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, regularization_penalty], feed_dict={x_input: x, y_: y})
 
         w_new = sess.run(w)
-        its += 1
         w_diff = np.sum(np.abs(w_new - w_old))
         loss_diff = np.abs(loss_old - loss_new)
-        if i % 1000 == 0:
-            print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
+        # if i % 1000 == 0:
+        #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
         w_old = w_new
         loss_old = loss_new
-        if i % 1000 == 0:
-            t_end = datetime.datetime.now()
-            accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-            print i,"reg", regularization, "init_reg", regularization_initialization, "accuracy:", accuracy__, "sum_red", sum_reduction__ , "reg_penalty", regularization_penalty__, "loss:", loss__, "weight_diff", w_diff
-            print "took:", t_end - t_start
-            t_start = t_end
-            # print "output:", output__
-            # print "log_output:", log_output__
-            # print "sum_reduction:", sum_reduction__
+        # if i % 1000 == 0:
+        #     t_end = datetime.datetime.now()
+        #     accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
+        #     print i,"reg", regularization, "init_reg", regularization_initialization, "accuracy:", accuracy__, "sum_red", sum_reduction__ , "reg_penalty", regularization_penalty__, "loss:", loss__, "weight_diff", w_diff
+        #     print "took:", t_end - t_start
+        #     t_start = t_end
+        #     # print "output:", output__
+        #     # print "log_output:", log_output__
+        #     # print "sum_reduction:", sum_reduction__
         # todo include termination criterion (weight change)
         # if w_diff < w_diff_term_crit and i != 0:
         if loss_diff < w_diff_term_crit and i != 0:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-                print "accuracy", accuracy__
-                print "loss", loss__
-                print "regularization", regularization
-                print "finished at iteration:", its
-                print ""
+                print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy", accuracy__, "loss", loss__
             break
 
     w_old = sess.run(w)
@@ -128,7 +123,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     print "accuracy_test", accuracy_test
     print "accuracy_train", accuracy_train
     print "w:\n", w_old
-    res_dict = {"loss":loss__, "regularization": regularization, "iterations": its, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
+    res_dict = {"loss": loss__, "regularization": regularization, "iterations": i, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
 
     if regularization_initialization != None:
         res_dict['initialized_with_regularization'] = regularization_initialization
