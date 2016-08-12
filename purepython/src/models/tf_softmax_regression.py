@@ -2,11 +2,13 @@ import datetime
 import tensorflow as tf
 import numpy as np
 import math
+import sys
+
 
 def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=1000000, regularization=1., w_diff_term_crit=0.0001, verbose=False, model=None, regularization_initialization=None):
 
     print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
-
+    sys.stdout.flush()
     assert(x.shape[1] == x_test.shape[1],
            "train shape:" + str(x.shape) +
            " and test shape:" + str(x_test.shape) +
@@ -130,5 +132,5 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     sess.close()
     tf.reset_default_graph()
     print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy_train", accuracy_train, "accuracy_test", accuracy_test, "loss", loss__, datetime.datetime.now()
-
+    sys.stdout.flush()
     return res_dict
