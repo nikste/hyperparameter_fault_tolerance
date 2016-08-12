@@ -4,6 +4,9 @@ import numpy as np
 import math
 
 def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=1000000, regularization=1., w_diff_term_crit=0.0001, verbose=False, model=None, regularization_initialization=None):
+
+    print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
+
     assert(x.shape[1] == x_test.shape[1],
            "train shape:" + str(x.shape) +
            " and test shape:" + str(x_test.shape) +
@@ -114,19 +117,18 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         if loss_diff < w_diff_term_crit and i != 0:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-                print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy", accuracy__, "loss", loss__
-            break
+                break
 
     w_old = sess.run(w)
     accuracy_test = sess.run([accuracy], feed_dict={x_input: x_test, y_: y_test})
     accuracy_train = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-    print "accuracy_test", accuracy_test
-    print "accuracy_train", accuracy_train
-    print "w:\n", w_old
+
     res_dict = {"loss": loss__, "regularization": regularization, "iterations": i, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
 
     if regularization_initialization != None:
         res_dict['initialized_with_regularization'] = regularization_initialization
     sess.close()
     tf.reset_default_graph()
+    print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy_train", accuracy_train, "accuracy_test", accuracy_test, "loss", loss__, datetime.datetime.now()
+
     return res_dict
