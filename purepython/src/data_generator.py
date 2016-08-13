@@ -10,6 +10,20 @@ def convert_to_1_hot(in_data, max_val):
     out_data[np.arange(len(in_data)), a] = 1
     return out_data
 
+def get_diabetes(train_test_ratio):
+    diabetes = datasets.load_diabetes()
+    x = diabetes.data
+    y = diabetes.target
+
+    y = np.reshape(y,(y.shape[0],1))
+    cutoff = int(x.shape[0] * train_test_ratio)
+
+    x_train = x[0:cutoff, :]
+    x_test = x[cutoff:, :]
+    y_train = y[:cutoff]
+    y_test = y[cutoff:]
+    return x_train, y_train, x_test, y_test
+
 
 def get_iris(train_test_ratio):
     iris = datasets.load_iris()

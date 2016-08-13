@@ -18,8 +18,17 @@ from visualizer import visualize_regression_points, visualize_warmstart_result, 
 # visualize_training_result('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 # visualize_weight_difference('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 
-train_all_parallel(dataset='mnist', fname='results_softmax_regression_mnist')
-warmstart_all_parallel(fname_in='results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
+
+
+
+# train_all_parallel(dataset='mnist', fname='results_softmax_regression_mnist')
+# warmstart_all_parallel(fname_in='results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
+# # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
+# visualize_training_result_from_parallel('results_softmax_regression_mnist')
+# visualize_warmstart_result_from_parallel("results_softmax_regression_warmstart_mnist")
+
+train_all_parallel(dataset='diabetes', fname='results_linear_regression_diabetes', model_type='linear_regression')
+warmstart_all_parallel(fname_in='results_linear_regression_diabetes', model_type='linear_regression', dataset='diabetes', fname_out='results_linear_regression_warmstart_diabetes')
 # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
-visualize_training_result_from_parallel('results_softmax_regression_mnist')
-visualize_warmstart_result_from_parallel("results_softmax_regression_warmstart_mnist")
+visualize_training_result_from_parallel('results_linear_regression_diabetes')
+visualize_warmstart_result_from_parallel("results_linear_regression_warmstart_diabetes")
