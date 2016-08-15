@@ -138,10 +138,11 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
 
 
     with tf.name_scope('regularization'):
-        regularization_penalty = (tf.reduce_sum(tf.square(w)) * reg_fact)
+        regularization_penalty = tf.reduce_sum(tf.square(w)) * reg_fact
 
     with tf.name_scope('loss'):
-        loss = tf.reduce_mean(tf.pow(output - y_, 2)) + regularization_penalty
+        loss_msq = tf.reduce_sum(tf.pow(output - y_, 2))
+        loss = loss_msq + regularization_penalty
 
     with tf.name_scope('optimizer'):
         opt = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
@@ -168,7 +169,7 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
         y = y[per]
 
         for ii in xrange(0, len(x), batch_size):
-            w__, b__,output__, loss__, _, regularization_penalty__ = sess.run([w, b, output, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
+            loss_msq__, w__, b__,output__, loss__, _, regularization_penalty__ = sess.run([loss_msq, w, b, output, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
             loss_new = loss__
             # log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, regularization_penalty], feed_dict={x_input: x, y_: y})
 
@@ -176,7 +177,7 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
         w_diff = np.sum(np.abs(w_new - w_old))
         loss_diff = np.abs(loss_old - loss_new)
         # if i % 1000 == 0:
-        #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
+        #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_msq", loss_msq__, "loss", loss__, "loss_diff:", loss_diff
         w_old = w_new
         loss_old = loss_new
         # if i % 1000 == 0:

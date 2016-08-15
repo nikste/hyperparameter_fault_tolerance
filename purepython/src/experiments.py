@@ -74,6 +74,10 @@ def train_parallel(dataset='mnist', fname='results_softmax_regression_mnist'):
 
 
 def train_all_parallel(dataset='mnist', fname='results_softmax_regression_mnist', model_type='softmax_regression'):
+    # linear regression
+    # learning_rate = 0.0001
+    # softmax_regression
+    learning_rate = 0.005
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
@@ -87,11 +91,11 @@ def train_all_parallel(dataset='mnist', fname='results_softmax_regression_mnist'
 
     if model_type == 'softmax_regression':
         results = joblib.Parallel(n_jobs=47)(delayed( tf_softmax_regression.train_softmax)(
-            x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
+            x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
             regularization=regularizations[reg_i], w_diff_term_crit=0.001, verbose=True) for i_par in range(10) for reg_i in xrange(0, len(regularizations)))
     elif model_type == 'linear_regression':
         results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)(
-            x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
+            x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
             regularization=regularizations[reg_i], w_diff_term_crit=0.001, verbose=True) for i_par in range(10) for
                                              reg_i in xrange(0, len(regularizations)))
 
