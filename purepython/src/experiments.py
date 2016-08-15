@@ -181,13 +181,16 @@ def warmstart_all_parallel(fname_in='results_softmax_regression_mnist', dataset=
 
             current_model = pretrained_models[init_i]['model'][0]
     if model_type == 'softmax_regression':
+        #previous_loss_train=None, previous_regularization_penalty_train=None
         results = joblib.Parallel(n_jobs=47)(delayed(tf_softmax_regression.train_softmax)
                                              (
-                                             x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
+                                             x, y, x_test, y_test, learning_rate=0.0001, max_iterations=1000000,
                                              w_diff_term_crit=0.001, verbose=True,
                                              regularization=regularizations[target_i],
                                              model=pretrained_models[init_i]['model'],
-                                             regularization_initialization=pretrained_models[init_i]['regularization']
+                                             regularization_initialization=pretrained_models[init_i]['regularization'],
+                                             previous_loss_train=pretrained_models[init_i]['loss_train'],
+                                             previous_regularization_penalty_train=pretrained_models[init_i]['regularization_penalty_train']
                                          ) for target_i in xrange(0, len(regularizations))
                                            for init_i in xrange(0, len(pretrained_models))
                                          )
