@@ -150,7 +150,7 @@ def visualize_warmstart_result_from_parallel(filename):
     k_reg = d_sorted.keys()
     k_reg_init = d_sorted[k_reg[0]].keys()
 
-    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train\t", "var_acc_train\t", "acc_test\t", "var_acc_test"
+    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train|loss_train\t", "var_acc_train|loss_train\t", "acc_test|loss_test\t", "var_acc_test|loss_test"
 
     for k_reg in sorted(d_sorted.keys()):
         for k_reg_init in sorted(d_sorted[k_reg].keys()):
@@ -205,7 +205,7 @@ def visualize_warmstart_result(filename):
     k_reg = d_sorted.keys()
     k_reg_init = d_sorted[k_reg[0]].keys()
 
-    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train\t", "var_acc_train\t", "acc_test\t", "var_acc_test"
+    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train|loss_train\t", "var_acc_train|loss_train\t", "acc_test|loss_test\t", "var_acc_test|loss_test"
 
     for k_reg in sorted(d_sorted.keys()):
         for k_reg_init in sorted(d_sorted[k_reg].keys()):

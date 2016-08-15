@@ -89,9 +89,9 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     for i in xrange(0,max_iterations):
         # shuffle input data:
-        per = np.random.permutation(range(0,x.shape[0]))
-        x = x[per]
-        y = y[per]
+        #per = np.random.permutation(range(0,x.shape[0]))
+        # x = x[per]
+        # y = y[per]
 
         for ii in xrange(0, len(x), batch_size):
             log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
@@ -101,8 +101,10 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         w_new = sess.run(w)
         w_diff = np.sum(np.abs(w_new - w_old))
         loss_diff = np.abs(loss_old - loss_new)
-        # if i % 1000 == 0:
-        #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
+        # if i % 1 == 0:
+        #     # print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
+        #     print i, "reg", regularization, "init_reg", regularization_initialization, "\nloss", loss__, "\nregularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
+        #     print i, "loss", loss__, "regularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
         w_old = w_new
         loss_old = loss_new
         # if i % 1000 == 0:
@@ -125,12 +127,27 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     accuracy_test = sess.run([accuracy], feed_dict={x_input: x_test, y_: y_test})
     accuracy_train = sess.run([accuracy], feed_dict={x_input: x, y_: y})
 
-    res_dict = {"loss": loss__, "regularization": regularization, "iterations": i, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
+    loss_train, regularization_penalty_train = sess.run([loss,regularization_penalty], feed_dict={x_input: x, y_: y})
+    loss_test, regularization_penalty_test = sess.run([loss,regularization_penalty], feed_dict={x_input: x_test, y_: y_test})
+    print "returning:"
+    print "w:\n", w__
+    print "b:\n", b__
+    res_dict = {"loss_train": loss_train,
+                "regularization_penalty_train": regularization_penalty_train,
+                "loss_test": loss_test,
+                "regularization_penalty_test": regularization_penalty_test,
+                "regularization": regularization, "iterations": i, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
 
     if regularization_initialization != None:
         res_dict['initialized_with_regularization'] = regularization_initialization
     sess.close()
     tf.reset_default_graph()
-    print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy_train", accuracy_train, "accuracy_test", accuracy_test, "loss", loss__, datetime.datetime.now()
+    print "finished", i, "reg", \
+        regularization, "init_reg", regularization_initialization, \
+        "accuracy_train", accuracy_train, "accuracy_test", accuracy_test, \
+        "loss_train", loss_train, \
+        "regularization_penalty_train", regularization_penalty_train, \
+        "loss_test", loss_test, \
+        "regularization_penalty_test", regularization_penalty_test, datetime.datetime.now()
     sys.stdout.flush()
     return res_dict
