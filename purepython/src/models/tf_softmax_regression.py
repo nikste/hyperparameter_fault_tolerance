@@ -101,10 +101,10 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         w_new = sess.run(w)
         w_diff = np.sum(np.abs(w_new - w_old))
         loss_diff = np.abs(loss_old - loss_new)
-        if i % 1 == 0:
-            # print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
-            # print i, "reg", regularization, "init_reg", regularization_initialization, "\nloss", loss__, "\nregularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
-            print i, "loss", previous_loss_train, loss__, "regularization_penalty", previous_regularization_penalty_train, regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
+        # if i % 1 == 0:
+        #     # print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
+        #     # print i, "reg", regularization, "init_reg", regularization_initialization, "\nloss", loss__, "\nregularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
+        #     print i, "loss", previous_loss_train, loss__, "regularization_penalty", previous_regularization_penalty_train, regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
         w_old = w_new
         loss_old = loss_new
         # if i % 1000 == 0:
