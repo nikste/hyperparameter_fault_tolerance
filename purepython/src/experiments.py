@@ -86,7 +86,7 @@ def train_all_parallel(dataset='mnist', fname='results_softmax_regression_mnist'
     elif dataset == 'diabetes':
         x, y, x_test, y_test = get_diabetes(train_test_ratio)
 
-    regularizations = [100.,0.001]#list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))#, 0.0001]
+    regularizations = [100., 0.001, 0.]#list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))#, 0.0001]
     # regularizations = [1., 0.001]#, 0.0001]
 
     if model_type == 'softmax_regression':
@@ -172,7 +172,7 @@ def warmstart_all_parallel(fname_in='results_softmax_regression_mnist', dataset=
     # for all target_regularizations (regularizations) -> reg_i is index for regularizations
     # for all init_regularizations (reg_init) -> pretrained_models[reg_i][i]['regularization']
     #    get the model parameters from pretrained_models[reg_i][i]['model']
-    regularizations = [100.,0.001,1.]#[100., 10., 1., 0.1, 0.01, 0.001, 0.]
+    regularizations = [100., 1., 0.001, 0.]#[100., 10., 1., 0.1, 0.01, 0.001, 0.]
 
     for target_i in xrange(0, len(regularizations)):
         for init_i in xrange(0, len(pretrained_models)):

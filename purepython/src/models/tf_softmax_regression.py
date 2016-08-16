@@ -87,7 +87,12 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     #     print "w_old",w_old
     t_start = datetime.datetime.now()
 
-    for i in xrange(0,max_iterations):
+
+    # convergence criteria:
+    # 5 consecutive error changes below threshold
+    error_changes_past = [100.,100.,100.,100.,100.]
+
+    for i in xrange(0, max_iterations):
         # shuffle input data:
         #per = np.random.permutation(range(0,x.shape[0]))
         # x = x[per]
@@ -107,6 +112,10 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         #     print i, "loss", previous_loss_train, loss__, "regularization_penalty", previous_regularization_penalty_train, regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
         w_old = w_new
         loss_old = loss_new
+
+        error_changes_past.append(loss_diff)
+        error_changes_past.pop(0)
+
         # if i % 1000 == 0:
         #     t_end = datetime.datetime.now()
         #     accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
@@ -118,10 +127,12 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         #     # print "sum_reduction:", sum_reduction__
         # todo include termination criterion (weight change)
         # if w_diff < w_diff_term_crit and i != 0:
-        if loss_diff < w_diff_term_crit and i != 0:
+        # if loss_diff < w_diff_term_crit and i != 0:
+        if np.sum(loss_diff) < w_diff_term_crit * 5:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
                 break
+            break
 
     w_old = sess.run(w)
     accuracy_test = sess.run([accuracy], feed_dict={x_input: x_test, y_: y_test})
