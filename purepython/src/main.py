@@ -20,7 +20,7 @@ from visualizer import visualize_regression_points, visualize_warmstart_result, 
 w_diff_term_crit = 0.01
 learning_rate = 0.0001
 regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
-dataset = 'mnist'
+dataset = 'iris'
 model_type = 'softmax_regression'
 train_test_ratio = 0.5
 if dataset == 'mnist':
@@ -30,11 +30,11 @@ elif dataset == 'iris':
 elif dataset == 'diabetes':
     x, y, x_test, y_test = get_diabetes(train_test_ratio)
 
-train_all_parallel(x, y, x_test, y_test,fname='results_softmax_regression_mnist', model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
-warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
+train_all_parallel(x, y, x_test, y_test,fname='results_softmax_regression_iris', model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
+warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_iris', fname_out='results_softmax_regression_warmstart_iris', model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
 # # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
-visualize_training_result_from_parallel('results_softmax_regression_mnist')
-visualize_warmstart_result_from_parallel("results_softmax_regression_warmstart_mnist")
+visualize_training_result_from_parallel('results_softmax_regression_iris')
+visualize_warmstart_result_from_parallel("results_softmax_regression_warmstart_iris")
 print "great success!"
 # train_all_parallel(dataset='diabetes', fname='results_linear_regression_diabetes', model_type='linear_regression')
 # warmstart_all_parallel(fname_in='results_linear_regression_diabetes', model_type='linear_regression', dataset='diabetes', fname_out='results_linear_regression_warmstart_diabetes')

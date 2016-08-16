@@ -24,7 +24,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     :param previous_regularization_penalty_train: regularization penaltiy if model is warmstarted
     :return:
     '''
-    
+
     print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
     sys.stdout.flush()
     assert(x.shape[1] == x_test.shape[1],
