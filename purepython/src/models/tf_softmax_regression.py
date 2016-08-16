@@ -89,7 +89,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     # convergence criteria:
     # 5 consecutive error changes below threshold
-    error_changes_past = [0.,0.,0.,0.,0.]
+    error_changes_past = [w_diff_term_crit, w_diff_term_crit, w_diff_term_crit, w_diff_term_crit,w_diff_term_crit]
 
     for i in xrange(0, max_iterations):
         log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x, y_: y})
@@ -106,7 +106,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         loss_old = loss_new
         w_old = w_new
 
-        if np.sum(error_changes_past) < w_diff_term_crit * 5:
+        if loss_diff < w_diff_term_crit :
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
                 break

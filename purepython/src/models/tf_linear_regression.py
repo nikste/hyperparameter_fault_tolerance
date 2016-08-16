@@ -152,48 +152,54 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
 
     sess.run(init)
 
-    its = 0
-    loss_train = -1.
-
-    batch_size = x.shape[0]
     w_old = sess.run(w)
-    loss_old = 0.
-    # if verbose:
-    #     print "w_old",w_old
-    t_start = datetime.datetime.now()
+    loss_old = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
 
+    # convergence criteria:
+    # 5 consecutive error changes below threshold
+    error_changes_past = [w_diff_term_crit, w_diff_term_crit, w_diff_term_crit, w_diff_term_crit,w_diff_term_crit]
     for i in xrange(0,max_iterations):
-        # shuffle input data:
-        per = np.random.permutation(range(0,x.shape[0]))
-        x = x[per]
-        y = y[per]
 
-        for ii in xrange(0, len(x), batch_size):
-            loss_msq__, w__, b__,output__, loss__, _, regularization_penalty__ = sess.run([loss_msq, w, b, output, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
-            loss_new = loss__
-            # log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, regularization_penalty], feed_dict={x_input: x, y_: y})
+        # loss_msq__, w__, b__,output__, loss__, _, regularization_penalty__ = sess.run([loss_msq, w, b, output, loss, opt, regularization_penalty], feed_dict={x_input: x, y_: y})
+        #
+        # w_new = sess.run(w)
+        # w_diff = np.sum(np.abs(w_new - w_old))
+        # loss_diff = np.abs(loss_old - loss_new)
+        # # if i % 1000 == 0:
+        # #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_msq", loss_msq__, "loss", loss__, "loss_diff:", loss_diff
+        # w_old = w_new
+        # loss_old = loss_new
+        # # if i % 1000 == 0:
+        # #     t_end = datetime.datetime.now()
+        # #     accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
+        # #     print i,"reg", regularization, "init_reg", regularization_initialization, "accuracy:", accuracy__, "sum_red", sum_reduction__ , "reg_penalty", regularization_penalty__, "loss:", loss__, "weight_diff", w_diff
+        # #     print "took:", t_end - t_start
+        # #     t_start = t_end
+        # #     # print "output:", output__
+        # #     # print "log_output:", log_output__
+        # #     # print "sum_reduction:", sum_reduction__
+        # # todo include termination criterion (weight change)
+        # # if w_diff < w_diff_term_crit and i != 0:
+        # if loss_diff < w_diff_term_crit and i != 0:
+        #     break
+        w__, b__, output__, loss__, _, regularization_penalty__ = sess.run(
+            [w, b, output, loss, opt, regularization_penalty],
+            feed_dict={x_input: x, y_: y})
 
         w_new = sess.run(w)
         w_diff = np.sum(np.abs(w_new - w_old))
-        loss_diff = np.abs(loss_old - loss_new)
-        # if i % 1000 == 0:
-        #     print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_msq", loss_msq__, "loss", loss__, "loss_diff:", loss_diff
-        w_old = w_new
-        loss_old = loss_new
-        # if i % 1000 == 0:
-        #     t_end = datetime.datetime.now()
-        #     accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-        #     print i,"reg", regularization, "init_reg", regularization_initialization, "accuracy:", accuracy__, "sum_red", sum_reduction__ , "reg_penalty", regularization_penalty__, "loss:", loss__, "weight_diff", w_diff
-        #     print "took:", t_end - t_start
-        #     t_start = t_end
-        #     # print "output:", output__
-        #     # print "log_output:", log_output__
-        #     # print "sum_reduction:", sum_reduction__
-        # todo include termination criterion (weight change)
-        # if w_diff < w_diff_term_crit and i != 0:
-        if loss_diff < w_diff_term_crit and i != 0:
-            break
 
+        loss_new = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
+        loss_diff = np.abs(loss_old - loss_new)
+
+        error_changes_past.append(loss_diff)
+        error_changes_past.pop(0)
+
+        loss_old = loss_new
+        w_old = w_new
+
+        if loss_diff < w_diff_term_crit:
+            break
     w_old = sess.run(w)
     loss_test = sess.run([loss], feed_dict={x_input: x_test, y_: y_test})
     loss_train = sess.run([loss], feed_dict={x_input: x, y_: y})
