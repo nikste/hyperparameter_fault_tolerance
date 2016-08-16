@@ -42,7 +42,7 @@ def get_boston(train_test_ratio):
 
 
 def get_covertype(train_test_ratio):
-    covertype = datasets.fetch_covertype()
+    covertype = datasets.fetch_covtype()
     x = covertype.data
 
     y = convert_to_1_hot(covertype.target, 7)
