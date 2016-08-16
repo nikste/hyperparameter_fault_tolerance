@@ -174,7 +174,7 @@ def corrupt_partially(org_model, new_model, corruption_ratio):
 
     w_res = w_org * bin_w + -1. * w_new * (bin_w - 1.)
     b_res = b_org * bin_b + -1. * b_new * (bin_b - 1.)
-    return (w_res, b_res)
+    return (w_res.astype(np.float32), b_res.astype(np.float32))
 
 def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.], corruption_ratio=0.5):
     pretrained_models = pickle.load(open(fname_in, 'rb'))
@@ -184,6 +184,7 @@ def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softm
     #     for m2 in pretrained_models:
     #         substitute selected weights
 
+    print "training", len(pretrained_models) * len(pretrained_models)
 
     if model_type == 'softmax_regression':
         #previous_loss_train=None, previous_regularization_penalty_train=None
