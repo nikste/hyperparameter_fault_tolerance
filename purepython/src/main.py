@@ -62,10 +62,12 @@ regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 # one_run(dataset, model_type)
 # print 'fully done!'
 
-dataset = 'boston'
-model_type = 'linear_regression'
-one_run(dataset, model_type)
 
+## does not seem to work TODO: check!
+# dataset = 'boston'
+# model_type = 'linear_regression'
+# one_run(dataset, model_type)
+#
 dataset = 'covertype'
 model_type = 'softmax_regression'
 one_run(dataset, model_type)
