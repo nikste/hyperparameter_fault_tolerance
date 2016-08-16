@@ -10,6 +10,8 @@ from models import tf_linear_regression
 
 import pickle
 
+import numpy as np
+
 def train(dataset='mnist', fname='results_softmax_regression_mnist'):
     train_test_ratio = 0.5
     if dataset == 'mnist':
@@ -42,7 +44,7 @@ def train(dataset='mnist', fname='results_softmax_regression_mnist'):
     pickle.dump(results, open(fname, 'wb'))
 
 
-def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_mnist', model_type='softmax_regression',  w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.]):
+def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.]):
     if model_type == 'softmax_regression':
         results = joblib.Parallel(n_jobs=47)(delayed( tf_softmax_regression.train_softmax)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
@@ -156,6 +158,65 @@ def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regre
                                                  regularization_initialization=pretrained_models[init_i][
                                                      'regularization']
                                              ) for target_i in xrange(0, len(regularizations))
+                                             for init_i in xrange(0, len(pretrained_models))
+                                             )
+    pickle.dump(results, open(fname_out, 'wb'))
+
+
+def corrupt_partially(org_model, new_model, corruption_ratio):
+    # TODO: factor in corruption ratio, as for now only 0.5!!
+    # take random subset of old model
+    w_org, b_org = org_model
+    w_new, b_new = new_model
+    # for random subset of old model take new model parameters
+    bin_w = np.random.randint(2, size=w_org.shape)
+    bin_b = np.random.randint(2, size=b_org.shape)
+
+    w_res = w_org * bin_w + -1. * w_new * (bin_w - 1.)
+    b_res = b_org * bin_b + -1. * b_new * (bin_b - 1.)
+    return (w_res, b_res)
+
+def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.], corruption_ratio=0.5):
+    pretrained_models = pickle.load(open(fname_in, 'rb'))
+
+    # for m in pretrained_models:
+    #     select subset of weights
+    #     for m2 in pretrained_models:
+    #         substitute selected weights
+
+
+    if model_type == 'softmax_regression':
+        #previous_loss_train=None, previous_regularization_penalty_train=None
+        results = joblib.Parallel(n_jobs=47)(delayed(tf_softmax_regression.train_softmax)
+                                             (
+                                             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
+                                             w_diff_term_crit=w_diff_term_crit, verbose=True,
+                                             regularization=pretrained_models[target_i]['regularization'],
+                                             model=corrupt_partially(pretrained_models[target_i]['model'], pretrained_models[init_i]['model'], corruption_ratio),
+                                             regularization_initialization=pretrained_models[init_i]['regularization'],
+                                             previous_loss_train=pretrained_models[init_i]['loss_train'],
+                                             previous_regularization_penalty_train=pretrained_models[init_i]['regularization_penalty_train']
+                                         ) for target_i in xrange(0, len(pretrained_models))
+                                           for init_i in xrange(0, len(pretrained_models))
+                                         )
+
+    if model_type == 'linear_regression':
+        # previous_loss_train=None, previous_regularization_penalty_train=None
+        results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)
+                                                 (
+                                                 x, y, x_test, y_test, learning_rate=learning_rate,
+                                                 max_iterations=1000000,
+                                                 w_diff_term_crit=w_diff_term_crit, verbose=True,
+                                                 regularization=pretrained_models[target_i]['regularization'],
+                                                 model=corrupt_partially(pretrained_models[target_i]['model'],
+                                                                         pretrained_models[init_i]['model'],
+                                                                         corruption_ratio),
+                                                 regularization_initialization=pretrained_models[init_i][
+                                                     'regularization'],
+                                                 previous_loss_train=pretrained_models[init_i]['loss_train'],
+                                                 previous_regularization_penalty_train=pretrained_models[init_i][
+                                                     'regularization_penalty_train']
+                                             ) for target_i in xrange(0, len(pretrained_models))
                                              for init_i in xrange(0, len(pretrained_models))
                                              )
     pickle.dump(results, open(fname_out, 'wb'))

@@ -1,6 +1,6 @@
 from models import tf_linear_regression
 from models import tf_logistic_regression
-from experiments import train, warmstart_all_parallel
+from experiments import train, warmstart_all_parallel, warmstart_partial_all_parallel
 from data_generator import generate_noisy_linear_data, get_diabetes, get_covertype, get_boston
 from data_generator import generate_noisy_polinomial_data
 from data_generator import get_mnist
@@ -18,7 +18,7 @@ from visualizer import visualize_regression_points, visualize_warmstart_result, 
 # visualize_training_result('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 # visualize_weight_difference('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 
-def one_run(dataset, modeltype):
+def full_failure_recovery(dataset, model_type):
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
@@ -30,11 +30,39 @@ def one_run(dataset, modeltype):
         x, y, x_test, y_test = get_covertype(train_test_ratio)
     elif dataset == 'boston':
         x, y, x_test, y_test = get_boston(train_test_ratio)
-
+    else:
+        print "warning dataset:", dataset, "not found\nexiting!"
+        return
     f_name_train = 'results_' + model_type + '_' + dataset
     f_name_warmstart = 'results_warmstart_' + model_type + '_' + dataset
     train_all_parallel(x, y, x_test, y_test,fname=f_name_train, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
     warmstart_all_parallel(x, y, x_test, y_test, fname_in=f_name_train, fname_out=f_name_warmstart, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
+    # # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
+    visualize_training_result_from_parallel(f_name_train)
+    visualize_warmstart_result_from_parallel(f_name_warmstart)
+    print "great success!"
+
+
+def partial_failure_recovery(dataset, model_type):
+    train_test_ratio = 0.5
+    if dataset == 'mnist':
+        x, y, x_test, y_test = get_mnist(train_test_ratio)
+    elif dataset == 'iris':
+        x, y, x_test, y_test = get_iris(train_test_ratio)
+    elif dataset == 'diabetes':
+        x, y, x_test, y_test = get_diabetes(train_test_ratio)
+    elif dataset == 'covertype':
+        x, y, x_test, y_test = get_covertype(train_test_ratio)
+    elif dataset == 'boston':
+        x, y, x_test, y_test = get_boston(train_test_ratio)
+    else:
+        print "warning dataset:", dataset, "not found\nexiting!"
+        return
+
+    f_name_train = 'results_' + model_type + '_' + dataset
+    f_name_warmstart = 'results_warmstart_corruption_' + model_type + '_' + dataset
+    train_all_parallel(x, y, x_test, y_test,fname=f_name_train, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
+    warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in=f_name_train, fname_out=f_name_warmstart, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations, corruption_ratio=0.5)
     # # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
     visualize_training_result_from_parallel(f_name_train)
     visualize_warmstart_result_from_parallel(f_name_warmstart)
@@ -51,27 +79,29 @@ regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 
 # dataset = 'mnist'
 # model_type = 'softmax_regression'
-# one_run(dataset, model_type)
+# full_failure_recovery(dataset, model_type)
 
 # dataset = 'iris'
 # model_type = 'softmax_regression'
-# one_run(dataset, model_type)
+# full_failure_recovery(dataset, model_type)
 #
 # dataset = 'diabetes'
 # model_type = 'linear_regression'
-# one_run(dataset, model_type)
+# full_failure_recovery(dataset, model_type)
 # print 'fully done!'
 
 
 ## does not seem to work TODO: check!
 # dataset = 'boston'
 # model_type = 'linear_regression'
-# one_run(dataset, model_type)
+# full_failure_recovery(dataset, model_type)
 #
-dataset = 'covertype'
+# dataset = 'covertype'
+# model_type = 'softmax_regression'
+# full_failure_recovery(dataset, model_type)
+
+dataset = 'mnist'
 model_type = 'softmax_regression'
-one_run(dataset, model_type)
-
-
+partial_failure_recovery(dataset, model_type)
 print 'fully done!'
 
