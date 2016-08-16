@@ -49,11 +49,11 @@ regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 # model_type = 'softmax_regression'
 # one_run(dataset, model_type)
 
-dataset = 'iris'
-model_type = 'softmax_regression'
-one_run(dataset, model_type)
-#
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
+# dataset = 'iris'
+# model_type = 'softmax_regression'
 # one_run(dataset, model_type)
-# print 'fully done!'
+#
+dataset = 'diabetes'
+model_type = 'linear_regression'
+one_run(dataset, model_type)
+print 'fully done!'
