@@ -1,7 +1,7 @@
 from models import tf_linear_regression
 from models import tf_logistic_regression
 from experiments import train, warmstart_all_parallel
-from data_generator import generate_noisy_linear_data, get_diabetes
+from data_generator import generate_noisy_linear_data, get_diabetes, get_covertype, get_boston
 from data_generator import generate_noisy_polinomial_data
 from data_generator import get_mnist
 from data_generator import get_iris
@@ -26,6 +26,10 @@ def one_run(dataset, modeltype):
         x, y, x_test, y_test = get_iris(train_test_ratio)
     elif dataset == 'diabetes':
         x, y, x_test, y_test = get_diabetes(train_test_ratio)
+    elif dataset == 'covertype':
+        x, y, x_test, y_test = get_covertype(train_test_ratio)
+    elif dataset == 'boston':
+        x, y, x_test, y_test = get_boston(train_test_ratio)
 
     f_name_train = 'results_' + model_type + '_' + dataset
     f_name_warmstart = 'results_warmstart_' + model_type + '_' + dataset
@@ -53,7 +57,19 @@ regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 # model_type = 'softmax_regression'
 # one_run(dataset, model_type)
 #
-dataset = 'diabetes'
+# dataset = 'diabetes'
+# model_type = 'linear_regression'
+# one_run(dataset, model_type)
+# print 'fully done!'
+
+dataset = 'boston'
 model_type = 'linear_regression'
 one_run(dataset, model_type)
+
+dataset = 'covertype'
+model_type = 'softmax_regression'
+one_run(dataset, model_type)
+
+
 print 'fully done!'
+
