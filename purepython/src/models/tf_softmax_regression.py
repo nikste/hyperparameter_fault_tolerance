@@ -128,7 +128,8 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         # todo include termination criterion (weight change)
         # if w_diff < w_diff_term_crit and i != 0:
         # if loss_diff < w_diff_term_crit and i != 0:
-        if np.sum(loss_diff) < w_diff_term_crit * 5:
+        # print i, w_diff_term_crit, error_changes_past, np.sum(error_changes_past)
+        if np.sum(error_changes_past) < w_diff_term_crit * 5:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
                 break
