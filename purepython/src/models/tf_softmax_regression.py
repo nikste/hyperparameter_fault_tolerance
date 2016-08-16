@@ -23,12 +23,6 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
            " and number of labels:" + str(y_test.shape) +
            " do not match!")
 
-    # print x.shape
-    # print y.shape
-    #
-    # print x_test.shape
-    # print y_test.shape
-    # set up constants
     num_input_dims = x.shape[1]
     num_label_dims = y.shape[1]
 
@@ -82,15 +76,13 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     batch_size = x.shape[0]
     w_old = sess.run(w)
-    loss_old = 0.
-    # if verbose:
-    #     print "w_old",w_old
+    loss_old = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
     t_start = datetime.datetime.now()
 
 
     # convergence criteria:
     # 5 consecutive error changes below threshold
-    error_changes_past = [100.,100.,100.,100.,100.]
+    error_changes_past = [0.,0.,0.,0.,0.]
 
     for i in xrange(0, max_iterations):
         # shuffle input data:
@@ -98,20 +90,21 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         # x = x[per]
         # y = y[per]
 
-        for ii in xrange(0, len(x), batch_size):
-            log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
-            loss_new = loss__
-            # log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, regularization_penalty], feed_dict={x_input: x, y_: y})
+        # for ii in xrange(0, len(x), batch_size):
+        #     log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
+        log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x, y_: y})
 
         w_new = sess.run(w)
         w_diff = np.sum(np.abs(w_new - w_old))
+
+        loss_new = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
         loss_diff = np.abs(loss_old - loss_new)
         # if i % 1 == 0:
         #     # print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
         #     # print i, "reg", regularization, "init_reg", regularization_initialization, "\nloss", loss__, "\nregularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
         #     print i, "loss", previous_loss_train, loss__, "regularization_penalty", previous_regularization_penalty_train, regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
-        w_old = w_new
-        loss_old = loss_new
+
+
 
         error_changes_past.append(loss_diff)
         error_changes_past.pop(0)
@@ -128,7 +121,11 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         # todo include termination criterion (weight change)
         # if w_diff < w_diff_term_crit and i != 0:
         # if loss_diff < w_diff_term_crit and i != 0:
-        # print i, w_diff_term_crit, error_changes_past, np.sum(error_changes_past)
+        # print i, "convergence_crit:", w_diff_term_crit, "error_change_past:", error_changes_past,"sum_error:", np.sum(error_changes_past), "loss_old:", loss_old, "loss_new", loss_new
+        # print i, "w_diff", w_diff
+        loss_old = loss_new
+        w_old = w_new
+        # if w_diff < w_diff_term_crit * 5:
         if np.sum(error_changes_past) < w_diff_term_crit * 5:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
@@ -141,9 +138,9 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     loss_train, regularization_penalty_train = sess.run([loss,regularization_penalty], feed_dict={x_input: x, y_: y})
     loss_test, regularization_penalty_test = sess.run([loss,regularization_penalty], feed_dict={x_input: x_test, y_: y_test})
-    print "returning:"
-    print "w:\n", w__
-    print "b:\n", b__
+    # print "returning:"
+    # print "w:\n", w__
+    # print "b:\n", b__
     res_dict = {"loss_train": loss_train,
                 "regularization_penalty_train": regularization_penalty_train,
                 "loss_test": loss_test,
