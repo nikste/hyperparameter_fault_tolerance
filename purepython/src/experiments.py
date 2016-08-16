@@ -11,7 +11,6 @@ from models import tf_linear_regression
 import pickle
 
 def train(dataset='mnist', fname='results_softmax_regression_mnist'):
-
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
@@ -44,11 +43,11 @@ def train(dataset='mnist', fname='results_softmax_regression_mnist'):
 
 
 def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_mnist', model_type='softmax_regression',  w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.]):
-
     if model_type == 'softmax_regression':
         results = joblib.Parallel(n_jobs=47)(delayed( tf_softmax_regression.train_softmax)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
             regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(10) for reg_i in xrange(0, len(regularizations)))
+
     elif model_type == 'linear_regression':
         results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
@@ -58,9 +57,7 @@ def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_m
     pickle.dump(results, open(fname, 'wb'))
 
 
-
 def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.]):
-
     pretrained_models = pickle.load(open(fname_in, 'rb'))
     if model_type == 'softmax_regression':
         #previous_loss_train=None, previous_regularization_penalty_train=None
@@ -92,7 +89,6 @@ def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regre
 
 
 def warmstart(fname_in='results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist'):
-
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
@@ -108,8 +104,6 @@ def warmstart(fname_in='results_softmax_regression_mnist', dataset='mnist', fnam
     for reg_i in xrange(0, len(pretrained_models)):
         # all have same regularization parameter
         intermediate_results = []
-        # print "reg_i", reg_i, "value:", regularizations[reg_i]
-        # print "resultslist:", results
         print "reg:", reg_i
         for i in xrange(0, len(pretrained_models[reg_i])):
             print "    i:", i

@@ -6,7 +6,25 @@ import sys
 
 
 def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=1000000, regularization=1., w_diff_term_crit=0.0001, verbose=False, model=None, regularization_initialization=None, previous_loss_train=None, previous_regularization_penalty_train=None):
-
+    '''
+    trains softmax model (probabilistic output), with gradient descent on
+    the whole training set
+    :param x: training data
+    :param y: training targets
+    :param x_test: test data
+    :param y_test: test targets
+    :param learning_rate: learning rate for gradient descent
+    :param max_iterations: maximum iterations
+    :param regularization: regularization parameter (lambda)
+    :param w_diff_term_crit: stopping criterion
+    :param verbose: prints more stuff
+    :param model: model parameters (weights and biases)
+    :param regularization_initialization: if the model is pre initialized
+    :param previous_loss_train: loss if warmstarted of the old model
+    :param previous_regularization_penalty_train: regularization penaltiy if model is warmstarted
+    :return:
+    '''
+    
     print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
     sys.stdout.flush()
     assert(x.shape[1] == x_test.shape[1],
@@ -38,9 +56,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         # init_vals = , name='truncated_normal_init_val_w')
         if model == None:
             w = tf.Variable(tf.truncated_normal([num_input_dims, num_label_dims], stddev=1. / math.sqrt(2)), name='w')
-            # w = tf.Variable(tf.zeros([num_input_dims, num_label_dims]), name='w')
             b = tf.Variable(tf.zeros([num_label_dims]), name='b')
-            # b = tf.Variable(tf.zeros([num_label_dims]), name='b')
         else:
             w = tf.Variable(model[0], name='w')
             b = tf.Variable(model[1], name='b')
@@ -48,7 +64,6 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         output = tf.nn.softmax(tf.matmul(x_input, w) + b)
 
     with tf.name_scope('regularization'):
-        # regularization_penalty = tf.reduce_sum(w, name='regularization_penalty_sum')
         regularization_penalty = (tf.reduce_sum(tf.square(w)) * reg_fact)
 
     with tf.name_scope('loss'):
@@ -63,35 +78,20 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     with tf.name_scope('optimizer'):
         opt = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
-        # grads = opt.compute_gradients(loss)
-        # opt = opt.apply_gradients(grads)
 
     init = tf.initialize_all_variables()
     sess = tf.Session()
 
     sess.run(init)
 
-    its = 0
-    loss_train = -1.
-
-    batch_size = x.shape[0]
     w_old = sess.run(w)
     loss_old = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
-    t_start = datetime.datetime.now()
-
 
     # convergence criteria:
     # 5 consecutive error changes below threshold
     error_changes_past = [0.,0.,0.,0.,0.]
 
     for i in xrange(0, max_iterations):
-        # shuffle input data:
-        #per = np.random.permutation(range(0,x.shape[0]))
-        # x = x[per]
-        # y = y[per]
-
-        # for ii in xrange(0, len(x), batch_size):
-        #     log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x[i:i + batch_size,:], y_: y[i:i + batch_size]})
         log_output__, sum_reduction__, w__, b__,output__, accuracy__, loss__, _, regularization_penalty__ = sess.run([log_output, sum_reduction, w, b, output, accuracy, loss, opt, regularization_penalty], feed_dict={x_input: x, y_: y})
 
         w_new = sess.run(w)
@@ -99,33 +99,13 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
         loss_new = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
         loss_diff = np.abs(loss_old - loss_new)
-        # if i % 1 == 0:
-        #     # print i, "reg", regularization, "init_reg", regularization_initialization, "w_diff:", w_diff, "loss_diff:", loss_diff
-        #     # print i, "reg", regularization, "init_reg", regularization_initialization, "\nloss", loss__, "\nregularization_penalty", regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
-        #     print i, "loss", previous_loss_train, loss__, "regularization_penalty", previous_regularization_penalty_train, regularization_penalty__,"\n"#, "w:\n", w__, "b:\n", b__#"w_diff:", w_diff, "loss_diff:", loss_diff
-
-
 
         error_changes_past.append(loss_diff)
         error_changes_past.pop(0)
 
-        # if i % 1000 == 0:
-        #     t_end = datetime.datetime.now()
-        #     accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
-        #     print i,"reg", regularization, "init_reg", regularization_initialization, "accuracy:", accuracy__, "sum_red", sum_reduction__ , "reg_penalty", regularization_penalty__, "loss:", loss__, "weight_diff", w_diff
-        #     print "took:", t_end - t_start
-        #     t_start = t_end
-        #     # print "output:", output__
-        #     # print "log_output:", log_output__
-        #     # print "sum_reduction:", sum_reduction__
-        # todo include termination criterion (weight change)
-        # if w_diff < w_diff_term_crit and i != 0:
-        # if loss_diff < w_diff_term_crit and i != 0:
-        # print i, "convergence_crit:", w_diff_term_crit, "error_change_past:", error_changes_past,"sum_error:", np.sum(error_changes_past), "loss_old:", loss_old, "loss_new", loss_new
-        # print i, "w_diff", w_diff
         loss_old = loss_new
         w_old = w_new
-        # if w_diff < w_diff_term_crit * 5:
+
         if np.sum(error_changes_past) < w_diff_term_crit * 5:
             if verbose:
                 accuracy__ = sess.run([accuracy], feed_dict={x_input: x, y_: y})
@@ -138,19 +118,18 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
 
     loss_train, regularization_penalty_train = sess.run([loss,regularization_penalty], feed_dict={x_input: x, y_: y})
     loss_test, regularization_penalty_test = sess.run([loss,regularization_penalty], feed_dict={x_input: x_test, y_: y_test})
-    # print "returning:"
-    # print "w:\n", w__
-    # print "b:\n", b__
     res_dict = {"loss_train": loss_train,
                 "regularization_penalty_train": regularization_penalty_train,
                 "loss_test": loss_test,
                 "regularization_penalty_test": regularization_penalty_test,
                 "regularization": regularization, "iterations": i, "accuracy_test": accuracy_test, "accuracy_train": accuracy_train, "model": (w__,b__)}
 
-    if regularization_initialization != None:
+    if regularization_initialization is not None:
         res_dict['initialized_with_regularization'] = regularization_initialization
+
     sess.close()
     tf.reset_default_graph()
+
     print "finished", i, "reg", \
         regularization, "init_reg", regularization_initialization, \
         "accuracy_train", accuracy_train, "accuracy_test", accuracy_test, \
@@ -159,4 +138,5 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
         "loss_test", loss_test, \
         "regularization_penalty_test", regularization_penalty_test, datetime.datetime.now()
     sys.stdout.flush()
+
     return res_dict
