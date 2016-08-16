@@ -45,13 +45,13 @@ w_diff_term_crit = 0.01
 learning_rate = 0.0001
 regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 
-dataset = 'mnist'
-model_type = 'softmax_regression'
-one_run(dataset, model_type)
-
-# dataset = 'iris'
+# dataset = 'mnist'
 # model_type = 'softmax_regression'
 # one_run(dataset, model_type)
+
+dataset = 'iris'
+model_type = 'softmax_regression'
+one_run(dataset, model_type)
 #
 # dataset = 'diabetes'
 # model_type = 'linear_regression'
