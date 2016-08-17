@@ -124,7 +124,11 @@ def visualize_training_result_from_parallel(filename):
             m_accuracy_test, "\t", var_accuracy_test
 
 
-def visualize_warmstart_result_from_parallel(filename):
+def visualize_warmstart_result_from_parallel(filename, filename_init):
+    d_init = pickle.load(open(filename_init, 'rb'))
+
+    d_sorted_init = rewrite_input_data_from_parallel(d_init)
+
     d = pickle.load(open(filename, 'rb'))
 
     regularizations = []
@@ -150,9 +154,14 @@ def visualize_warmstart_result_from_parallel(filename):
     k_reg = d_sorted.keys()
     k_reg_init = d_sorted[k_reg[0]].keys()
 
-    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train|loss_train\t", "var_acc_train|loss_train\t", "acc_test|loss_test\t", "var_acc_test|loss_test"
+    print  "reg\t", "reg_init\t", "mean\t", "variance\t", "mean_acc_train|loss_train\t", "var_acc_train|loss_train\t", "acc_test|loss_test\t", "var_acc_test|loss_test", "without warmstart"
 
     for k_reg in sorted(d_sorted.keys()):
+
+        # reference values
+        el = d_sorted_init[k_reg]
+        m_iterations_init = np.mean(el['iterations'])
+
         for k_reg_init in sorted(d_sorted[k_reg].keys()):
             # print d_sorted[k_reg][k_reg_init]['iterations']
             m_iterations = np.mean(d_sorted[k_reg][k_reg_init]['iterations'])
@@ -172,7 +181,7 @@ def visualize_warmstart_result_from_parallel(filename):
 
             print k_reg, "\t", k_reg_init, "\t", m_iterations, "\t", var_iterations, "\t", \
                 m_accuracy_train, "\t", var_accuracy_train, "\t", \
-                m_accuracy_test, "\t", var_accuracy_test
+                m_accuracy_test, "\t", var_accuracy_test, "\t", m_iterations_init
         print " "
 
 

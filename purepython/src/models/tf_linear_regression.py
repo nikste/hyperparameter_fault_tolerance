@@ -108,7 +108,7 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
             "number of testing samples:" + str(x_test.shape) +
             " and number of labels:" + str(y_test.shape) +
             " do not match!")
-    print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
+    print "starting training lin reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
     sys.stdout.flush()
     # set up constants
     num_input_dims = x.shape[1]
@@ -141,7 +141,8 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
         regularization_penalty = tf.reduce_sum(tf.square(w)) * reg_fact
 
     with tf.name_scope('loss'):
-        loss_msq = tf.reduce_sum(tf.pow(output - y_, 2))
+        pred_loss = output - y_
+        loss_msq = tf.reduce_mean(tf.pow(pred_loss, 2))
         loss = loss_msq + regularization_penalty
 
     with tf.name_scope('optimizer'):
@@ -182,8 +183,8 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
         # # if w_diff < w_diff_term_crit and i != 0:
         # if loss_diff < w_diff_term_crit and i != 0:
         #     break
-        w__, b__, output__, loss__, _, regularization_penalty__ = sess.run(
-            [w, b, output, loss, opt, regularization_penalty],
+        w__, b__, output__, loss__, loss_msq__, _, regularization_penalty__ = sess.run(
+            [w, b, output, loss, loss_msq, opt, regularization_penalty],
             feed_dict={x_input: x, y_: y})
 
         w_new = sess.run(w)
@@ -191,6 +192,9 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
 
         loss_new = sess.run([loss], feed_dict={x_input: x, y_: y})[0]
         loss_diff = np.abs(loss_old - loss_new)
+
+        # if i % 100 == 0:
+        #     print loss_new
 
         error_changes_past.append(loss_diff)
         error_changes_past.pop(0)

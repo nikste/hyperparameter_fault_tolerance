@@ -74,7 +74,7 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     with tf.name_scope('loss'):
         # squared error loss + regularizationPenalty
         log_output = tf.log(output + 1e-9)
-        sum_reduction = - tf.reduce_sum(y_ * log_output)
+        sum_reduction = - tf.reduce_mean(y_ * log_output)
         loss = sum_reduction + regularization_penalty
 
     with tf.name_scope('accuracy'):

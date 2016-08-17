@@ -19,6 +19,9 @@ def get_diabetes(train_test_ratio):
     y = np.reshape(y,(y.shape[0],1))
     cutoff = int(x.shape[0] * train_test_ratio)
 
+    x = x.astype(np.float32)
+    y = y.astype(np.float32)
+
     x_train = x[0:cutoff, :]
     x_test = x[cutoff:, :]
     y_train = y[:cutoff]
@@ -34,6 +37,9 @@ def get_boston(train_test_ratio):
     y = np.reshape(y,(y.shape[0],1))
     cutoff = int(x.shape[0] * train_test_ratio)
 
+    x = x.astype(np.float32)
+    y = y.astype(np.float32)
+
     x_train = x[0:cutoff, :]
     x_test = x[cutoff:, :]
     y_train = y[:cutoff]
@@ -48,6 +54,9 @@ def get_covertype(train_test_ratio):
     y = convert_to_1_hot(covertype.target, 7)
     cutoff = int(x.shape[0] * train_test_ratio)
 
+    x = x.astype(np.float32)
+    y = y.astype(np.float32)
+
     x_train = x[0:cutoff, :]
     x_test = x[cutoff:, :]
     y_train = y[0:cutoff]
@@ -60,6 +69,9 @@ def get_iris(train_test_ratio):
     y = convert_to_1_hot(iris.target, 3)
 
     cutoff = int(x.shape[0] * train_test_ratio)
+
+    x = x.astype(np.float32)
+    y = y.astype(np.float32)
 
     x_train = x[0:cutoff, :]
     x_test = x[cutoff:, :]
@@ -75,6 +87,9 @@ def get_mnist(train_test_ratio):
 
     y = convert_to_1_hot(digits.target, 10)
     cutoff = int(x.shape[0] * train_test_ratio)
+
+    x = x.astype(np.float32)
+    y = y.astype(np.float32)
 
     x_train = x[0:cutoff, :] / 16.
     x_test = x[cutoff:, :] / 16.
