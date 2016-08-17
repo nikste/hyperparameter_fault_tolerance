@@ -25,7 +25,6 @@ def train_softmax(x, y, x_test, y_test, learning_rate=0.01, max_iterations=10000
     '''
 
     print "starting training reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
-
     try:
         sys.stdout.flush()
     except IOError as e:

@@ -109,7 +109,11 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
             " and number of labels:" + str(y_test.shape) +
             " do not match!")
     print "starting training lin reg", regularization, "init_reg", regularization_initialization, datetime.datetime.now()
-    sys.stdout.flush()
+    try:
+        sys.stdout.flush()
+    except IOError as e:
+        if e.errno == errno.EPIPE:
+            print "broken pipe?"
     # set up constants
     num_input_dims = x.shape[1]
     num_label_dims = y.shape[1]
@@ -216,7 +220,11 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
     tf.reset_default_graph()
     # TODO: rename accuracy in loss here ?
     print "finished", i, "reg", regularization, "init_reg", regularization_initialization, "accuracy_train", loss_train, "accuracy_test", loss_test, "loss", loss__, datetime.datetime.now()
-    sys.stdout.flush()
+    try:
+        sys.stdout.flush()
+    except IOError as e:
+        if e.errno == errno.EPIPE:
+            print "broken pipe?"
     return res_dict
 
 def train_single_output(x, y, x_test, y_test, learning_rate=0.00001, max_iterations=1000000, regularization=1., w_diff_term_crit=0.0001, verbose=False, model=None):

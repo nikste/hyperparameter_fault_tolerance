@@ -48,7 +48,7 @@ def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_m
     if model_type == 'softmax_regression':
         results = joblib.Parallel(n_jobs=47)(delayed( tf_softmax_regression.train_softmax)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
-            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(1) for reg_i in xrange(0, len(regularizations)))
+            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(10) for reg_i in xrange(0, len(regularizations)))
 
     elif model_type == 'linear_regression':
         results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)(
