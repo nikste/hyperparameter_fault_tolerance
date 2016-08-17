@@ -110,7 +110,7 @@ def partial_failure_recovery(dataset, model_type):
 # visualize_training_result_from_parallel('results_linear_regression_diabetes')
 # visualize_warmstart_result_from_parallel("results_linear_regression_warmstart_diabetes")
 
-w_diff_term_crit = 0.01
+w_diff_term_crit = 0.0001
 # learning_rate = 0.0001
 learning_rate = 0.000001
 regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
