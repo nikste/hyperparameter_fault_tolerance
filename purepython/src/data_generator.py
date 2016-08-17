@@ -51,7 +51,7 @@ def get_covertype(train_test_ratio):
     covertype = datasets.fetch_covtype()
     x = covertype.data
 
-    y = convert_to_1_hot(covertype.target, 7)
+    y = convert_to_1_hot(covertype.target - 1, 7)
     cutoff = int(x.shape[0] * train_test_ratio)
 
     x = x.astype(np.float32)
