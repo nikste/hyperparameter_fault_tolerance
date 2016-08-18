@@ -119,44 +119,44 @@ dataset = 'covertype'
 model_type = 'softmax_regression'
 full_failure_recovery(dataset, model_type)
 
-dataset = 'mnist'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
+# dataset = 'mnist'
+# model_type = 'softmax_regression'
+# full_failure_recovery(dataset, model_type)
+#
+# dataset = 'iris'
+# model_type = 'softmax_regression'
+# full_failure_recovery(dataset, model_type)
+#
+# dataset = 'diabetes'
+# model_type = 'linear_regression'
+# full_failure_recovery(dataset, model_type)
+#
+#
+# dataset = 'mnist'
+# model_type = 'softmax_regression'
+# partial_failure_recovery(dataset, model_type)
+# #
+# dataset = 'iris'
+# model_type = 'softmax_regression'
+# partial_failure_recovery(dataset, model_type)
+#
+# dataset = 'diabetes'
+# model_type = 'linear_regression'
+# partial_failure_recovery(dataset, model_type)
+#
+# learning_rate = 0.000001
+# dataset = 'boston'
+# model_type = 'linear_regression'
+# full_failure_recovery(dataset, model_type)
+#
+# dataset = 'boston'
+# model_type = 'linear_regression'
+# partial_failure_recovery(dataset, model_type)
 
-dataset = 'iris'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
 
-dataset = 'diabetes'
-model_type = 'linear_regression'
-full_failure_recovery(dataset, model_type)
-
-learning_rate = 0.000001
-dataset = 'boston'
-model_type = 'linear_regression'
-full_failure_recovery(dataset, model_type)
-
-print 'fully done!'
+print 'fully done'
 try:
     sys.stdout.flush()
 except IOError as e:
     if e.errno == errno.EPIPE:
         print "broken pipe?"
-
-dataset = 'mnist'
-model_type = 'softmax_regression'
-partial_failure_recovery(dataset, model_type)
-#
-dataset = 'iris'
-model_type = 'softmax_regression'
-partial_failure_recovery(dataset, model_type)
-
-dataset = 'diabetes'
-model_type = 'linear_regression'
-partial_failure_recovery(dataset, model_type)
-
-dataset = 'boston'
-model_type = 'linear_regression'
-partial_failure_recovery(dataset, model_type)
-
-
