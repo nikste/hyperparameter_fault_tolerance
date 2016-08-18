@@ -115,13 +115,13 @@ learning_rate = 0.0001
 
 regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 
-dataset = 'covertype'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
-
-# dataset = 'mnist'
+# dataset = 'covertype'
 # model_type = 'softmax_regression'
 # full_failure_recovery(dataset, model_type)
+
+dataset = 'mnist'
+model_type = 'softmax_regression'
+full_failure_recovery(dataset, model_type)
 #
 # dataset = 'iris'
 # model_type = 'softmax_regression'
