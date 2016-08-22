@@ -110,7 +110,7 @@ def partial_failure_recovery(dataset, model_type):
 # visualize_training_result_from_parallel('results_linear_regression_diabetes')
 # visualize_warmstart_result_from_parallel("results_linear_regression_warmstart_diabetes")
 
-w_diff_term_crit = 0.001
+w_diff_term_crit = 0.0001
 learning_rate = 0.0001
 
 regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
@@ -119,31 +119,36 @@ regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 # model_type = 'softmax_regression'
 # full_failure_recovery(dataset, model_type)
 
-dataset = 'mnist'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
-#
-# dataset = 'iris'
+# dataset = 'covertype'
+# model_type = 'softmax_regression'
+# partial_failure_recovery(dataset, model_type)
+
+# dataset = 'mnist'
 # model_type = 'softmax_regression'
 # full_failure_recovery(dataset, model_type)
-#
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
-# full_failure_recovery(dataset, model_type)
-#
-#
+
 # dataset = 'mnist'
 # model_type = 'softmax_regression'
 # partial_failure_recovery(dataset, model_type)
-# #
+
+
+dataset = 'iris'
+model_type = 'softmax_regression'
+partial_failure_recovery(dataset, model_type)
+
 # dataset = 'iris'
 # model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
+# full_failure_recovery(dataset, model_type)
+
+
+# dataset = 'diabetes'
+# model_type = 'linear_regression'
+# full_failure_recovery(dataset, model_type)
 #
 # dataset = 'diabetes'
 # model_type = 'linear_regression'
 # partial_failure_recovery(dataset, model_type)
-#
+
 # learning_rate = 0.000001
 # dataset = 'boston'
 # model_type = 'linear_regression'
