@@ -87,7 +87,7 @@ def partial_failure_recovery(dataset, model_type):
 
     f_name_train = 'results_' + model_type + '_' + dataset
     f_name_warmstart = 'results_warmstart_corruption_' + model_type + '_' + dataset
-    # train_all_parallel(x, y, x_test, y_test,fname=f_name_train, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
+    #train_all_parallel(x, y, x_test, y_test,fname=f_name_train, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
     warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in=f_name_train, fname_out=f_name_warmstart, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations, corruption_ratio=0.5)
     # # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
     print "training", dataset, model_type, "full failure"
@@ -110,44 +110,46 @@ def partial_failure_recovery(dataset, model_type):
 # visualize_training_result_from_parallel('results_linear_regression_diabetes')
 # visualize_warmstart_result_from_parallel("results_linear_regression_warmstart_diabetes")
 
-w_diff_term_crit = 0.00001
-learning_rate = 0.01
+w_diff_term_crit = 0.0001
+learning_rate = 0.0001
 
-regularizations = [10., 1.,  0.1, 0.]
-
-# dataset = 'covertype'
-# model_type = 'softmax_regression'
-# full_failure_recovery(dataset, model_type)
+regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.]))
 
 # dataset = 'covertype'
 # model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
-
-dataset = 'mnist'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
-
-# dataset = 'mnist'
-# model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
-
-
-# dataset = 'iris'
-# model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
-
-# dataset = 'iris'
-# model_type = 'softmax_regression'
 # full_failure_recovery(dataset, model_type)
 
-
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
-# full_failure_recovery(dataset, model_type)
-#
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
+# dataset = 'covertype'
+# model_type = 'softmax_regression'
 # partial_failure_recovery(dataset, model_type)
+
+
+#dataset = 'mnist'
+#model_type = 'softmax_regression'
+#full_failure_recovery(dataset, model_type)
+
+#dataset = 'mnist'
+#model_type = 'softmax_regression'
+#partial_failure_recovery(dataset, model_type)
+
+# done!
+#dataset = 'iris'
+#model_type = 'softmax_regression'
+#partial_failure_recovery(dataset, model_type)
+
+# done!
+#dataset = 'iris'
+#model_type = 'softmax_regression'
+#full_failure_recovery(dataset, model_type)
+
+
+#dataset = 'diabetes'
+#model_type = 'linear_regression'
+#full_failure_recovery(dataset, model_type)
+
+dataset = 'diabetes'
+model_type = 'linear_regression'
+partial_failure_recovery(dataset, model_type)
 
 # learning_rate = 0.000001
 # dataset = 'boston'
