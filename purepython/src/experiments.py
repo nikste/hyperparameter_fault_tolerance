@@ -12,14 +12,12 @@ import pickle
 
 import numpy as np
 
-def train(dataset='mnist', fname='results_softmax_regression_mnist'):
+def train(regularizations, dataset='mnist', fname='results_softmax_regression_mnist'):
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
     elif dataset == 'iris':
         x, y, x_test, y_test = get_iris(train_test_ratio)
-
-    regularizations = list(reversed([100., 10., 1., 0.1, 0.01, 0.001, 0.0001]))
 
     results = []
     for reg_i in xrange(0, len(regularizations)):
@@ -48,12 +46,12 @@ def train_all_parallel(x, y, x_test, y_test, fname='results_softmax_regression_m
     if model_type == 'softmax_regression':
         results = joblib.Parallel(n_jobs=47)(delayed( tf_softmax_regression.train_softmax)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
-            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(10) for reg_i in xrange(0, len(regularizations)))
+            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(48) for reg_i in xrange(0, len(regularizations)))
 
     elif model_type == 'linear_regression':
         results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)(
             x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
-            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(10) for
+            regularization=regularizations[reg_i], w_diff_term_crit=w_diff_term_crit, verbose=True) for i_par in range(48) for
                                              reg_i in xrange(0, len(regularizations)))
 
     pickle.dump(results, open(fname, 'wb'))
@@ -136,7 +134,7 @@ def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regre
     pretrained_models = pickle.load(open(fname_in, 'rb'))
     if model_type == 'softmax_regression':
         #previous_loss_train=None, previous_regularization_penalty_train=None
-        results = joblib.Parallel(n_jobs=47)(delayed(tf_softmax_regression.train_softmax)
+        results = joblib.Parallel(n_jobs=48)(delayed(tf_softmax_regression.train_softmax)
                                              (
                                              x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
                                              w_diff_term_crit=w_diff_term_crit, verbose=True,
@@ -149,7 +147,7 @@ def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regre
                                            for init_i in xrange(0, len(pretrained_models))
                                          )
     elif model_type == 'linear_regression':
-        results = joblib.Parallel(n_jobs=47)(delayed(tf_linear_regression.train)
+        results = joblib.Parallel(n_jobs=48)(delayed(tf_linear_regression.train)
                                                  (
                                                  x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
                                                  w_diff_term_crit=w_diff_term_crit, verbose=True,

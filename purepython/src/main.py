@@ -22,7 +22,7 @@ from visualizer import visualize_regression_points, visualize_warmstart_result, 
 # visualize_training_result('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 # visualize_weight_difference('/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist')
 
-def full_failure_recovery(dataset, model_type):
+def full_failure_recovery(dataset, model_type, regularizations):
 
     train_test_ratio = 0.5
     if dataset == 'mnist':
@@ -64,7 +64,7 @@ def full_failure_recovery(dataset, model_type):
             print "broken pipe?"
 
 
-def partial_failure_recovery(dataset, model_type):
+def partial_failure_recovery(dataset, model_type, regularizations):
     train_test_ratio = 0.5
     if dataset == 'mnist':
         x, y, x_test, y_test = get_mnist(train_test_ratio)
@@ -113,7 +113,7 @@ def partial_failure_recovery(dataset, model_type):
 w_diff_term_crit = 0.00001
 learning_rate = 0.01
 
-regularizations = [10., 1.,  0.1, 0.]
+regularizations = list(reversed([10., 1.,  0.1, 0.]))
 
 # dataset = 'covertype'
 # model_type = 'softmax_regression'
@@ -123,40 +123,40 @@ regularizations = [10., 1.,  0.1, 0.]
 # model_type = 'softmax_regression'
 # partial_failure_recovery(dataset, model_type)
 
-dataset = 'mnist'
-model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
+# dataset = 'mnist'
+# model_type = 'softmax_regression'
+# full_failure_recovery(dataset, model_type)
 
 # dataset = 'mnist'
 # model_type = 'softmax_regression'
 # partial_failure_recovery(dataset, model_type)
 
+# dataset = 'iris'
+# model_type = 'softmax_regression'
+# full_failure_recovery(dataset, model_type, regularizations)
+
 
 # dataset = 'iris'
 # model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
-
-# dataset = 'iris'
-# model_type = 'softmax_regression'
-# full_failure_recovery(dataset, model_type)
+# partial_failure_recovery(dataset, model_type, regularizations)
 
 
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
-# full_failure_recovery(dataset, model_type)
+dataset = 'diabetes'
+model_type = 'linear_regression'
+full_failure_recovery(dataset, model_type, regularizations)
 #
-# dataset = 'diabetes'
-# model_type = 'linear_regression'
-# partial_failure_recovery(dataset, model_type)
+dataset = 'diabetes'
+model_type = 'linear_regression'
+partial_failure_recovery(dataset, model_type, regularizations)
 
 # learning_rate = 0.000001
 # dataset = 'boston'
 # model_type = 'linear_regression'
-# full_failure_recovery(dataset, model_type)
+# full_failure_recovery(dataset, model_type, regularizations)
 #
 # dataset = 'boston'
 # model_type = 'linear_regression'
-# partial_failure_recovery(dataset, model_type)
+# partial_failure_recovery(dataset, model_type, regularizations)
 
 
 print 'fully done'
