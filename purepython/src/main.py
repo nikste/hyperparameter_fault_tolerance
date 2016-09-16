@@ -13,6 +13,18 @@ from experiments import warmstart,train_all_parallel
 from visualizer import visualize_regression_points, visualize_warmstart_result, visualize_training_result, \
     visualize_weight_difference, visualize_warmstart_result_from_parallel, visualize_training_result_from_parallel
 
+
+# No handlers could be found for logger "root" fix
+import logging
+
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        print "logger says:", record
+
+h = NullHandler()
+logging.getLogger("root").addHandler(h)
+
+
 # train(dataset='mnist', fname='results_softmax_regression_mnist')
 
 # warmstart(fname_in='results_softmax_regression_iris', dataset='iris', fname_out='results_softmax_regression_warmstart_iris')
