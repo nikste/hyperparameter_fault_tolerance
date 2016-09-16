@@ -132,6 +132,8 @@ def warmstart(fname_in='results_softmax_regression_mnist', dataset='mnist', fnam
 
 def warmstart_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.]):
     pretrained_models = pickle.load(open(fname_in, 'rb'))
+    print fname_in
+    print len(pretrained_models) * len(regularizations)
     if model_type == 'softmax_regression':
         #previous_loss_train=None, previous_regularization_penalty_train=None
         results = joblib.Parallel(n_jobs=48)(delayed(tf_softmax_regression.train_softmax)
@@ -175,14 +177,10 @@ def corrupt_partially(org_model, new_model, corruption_ratio):
     return (w_res.astype(np.float32), b_res.astype(np.float32))
 
 def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softmax_regression_mnist', fname_out='results_softmax_regression_warmstart_mnist', model_type='softmax_regression', w_diff_term_crit=0.0001, learning_rate=0.0001, regularizations = [100., 10., 1., 0.1, 0.01, 0.001, 0.], corruption_ratio=0.5):
+    print "filename", fname_in
     pretrained_models = pickle.load(open(fname_in, 'rb'))
 
-    # for m in pretrained_models:
-    #     select subset of weights
-    #     for m2 in pretrained_models:
-    #         substitute selected weights
-
-    print "training", len(pretrained_models) * len(pretrained_models)
+    print "training", len(pretrained_models) * len(regularizations)
 
     if model_type == 'softmax_regression':
         #previous_loss_train=None, previous_regularization_penalty_train=None
@@ -190,12 +188,12 @@ def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softm
                                              (
                                              x, y, x_test, y_test, learning_rate=learning_rate, max_iterations=1000000,
                                              w_diff_term_crit=w_diff_term_crit, verbose=True,
-                                             regularization=pretrained_models[target_i]['regularization'],
+                                             regularization=regularizations[target_i],#pretrained_models[target_i]['regularization'],
                                              model=corrupt_partially(pretrained_models[target_i]['model'], pretrained_models[init_i]['model'], corruption_ratio),
                                              regularization_initialization=pretrained_models[init_i]['regularization'],
                                              previous_loss_train=pretrained_models[init_i]['loss_train'],
                                              previous_regularization_penalty_train=pretrained_models[init_i]['regularization_penalty_train']
-                                         ) for target_i in xrange(0, len(pretrained_models))
+                                         ) for target_i in xrange(0,len(regularizations)) #for target_i in xrange(0, len(pretrained_models))
                                            for init_i in xrange(0, len(pretrained_models))
                                          )
 
@@ -206,7 +204,7 @@ def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softm
                                                  x, y, x_test, y_test, learning_rate=learning_rate,
                                                  max_iterations=1000000,
                                                  w_diff_term_crit=w_diff_term_crit, verbose=True,
-                                                 regularization=pretrained_models[target_i]['regularization'],
+                                                 regularization=regularizations[target_i],#pretrained_models[target_i]['regularization'],
                                                  model=corrupt_partially(pretrained_models[target_i]['model'],
                                                                          pretrained_models[init_i]['model'],
                                                                          corruption_ratio),
@@ -215,7 +213,7 @@ def warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in='results_softm
                                                  # previous_loss_train=pretrained_models[init_i]['loss_train'],
                                                  # previous_regularization_penalty_train=pretrained_models[init_i][
                                                  #     'regularization_penalty_train']
-                                             ) for target_i in xrange(0, len(pretrained_models))
+                                             ) for target_i in xrange(0, len(regularizations))#for target_i in xrange(0, len(pretrained_models))
                                              for init_i in xrange(0, len(pretrained_models))
                                              )
     pickle.dump(results, open(fname_out, 'wb'))

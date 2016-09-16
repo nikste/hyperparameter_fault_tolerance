@@ -90,7 +90,7 @@ def partial_failure_recovery(dataset, model_type, regularizations):
     # train_all_parallel(x, y, x_test, y_test,fname=f_name_train, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations)
     warmstart_partial_all_parallel(x, y, x_test, y_test, fname_in=f_name_train, fname_out=f_name_warmstart, model_type=model_type, w_diff_term_crit=w_diff_term_crit, learning_rate=learning_rate, regularizations=regularizations, corruption_ratio=0.5)
     # # warmstart_all_parallel(fname_in='/home/nikste/workspace-python/parallel-failure-recovery/experiments_results/mnist/results_softmax_regression_mnist', dataset='mnist', fname_out='results_softmax_regression_warmstart_mnist')
-    print "training", dataset, model_type, "full failure"
+    print "training", dataset, model_type, "partial failure"
     try:
         sys.stdout.flush()
     except IOError as e:
@@ -115,48 +115,50 @@ learning_rate = 0.01
 
 regularizations = list(reversed([10., 1.,  0.1, 0.]))
 
-# dataset = 'covertype'
-# model_type = 'softmax_regression'
-# full_failure_recovery(dataset, model_type)
+dataset = 'covertype'
+model_type = 'softmax_regression'
+full_failure_recovery(dataset, model_type)
 
-# dataset = 'covertype'
-# model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
+dataset = 'covertype'
+model_type = 'softmax_regression'
+partial_failure_recovery(dataset, model_type)
 
-# dataset = 'mnist'
-# model_type = 'softmax_regression'
-# full_failure_recovery(dataset, model_type)
+dataset = 'mnist'
+model_type = 'softmax_regression'
+full_failure_recovery(dataset, model_type)
 
-# dataset = 'mnist'
-# model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type)
+dataset = 'mnist'
+model_type = 'softmax_regression'
+partial_failure_recovery(dataset, model_type)
 
-# dataset = 'iris'
-# model_type = 'softmax_regression'
-# full_failure_recovery(dataset, model_type, regularizations)
+dataset = 'iris'
+model_type = 'softmax_regression'
+full_failure_recovery(dataset, model_type, regularizations)
 
+dataset = 'iris'
+model_type = 'softmax_regression'
+partial_failure_recovery(dataset, model_type, regularizations)
 
-# dataset = 'iris'
-# model_type = 'softmax_regression'
-# partial_failure_recovery(dataset, model_type, regularizations)
-
+w_diff_term_crit = 0.1
+learning_rate = 0.01
 
 dataset = 'diabetes'
 model_type = 'linear_regression'
 full_failure_recovery(dataset, model_type, regularizations)
-#
+
 dataset = 'diabetes'
 model_type = 'linear_regression'
 partial_failure_recovery(dataset, model_type, regularizations)
 
-# learning_rate = 0.000001
-# dataset = 'boston'
-# model_type = 'linear_regression'
-# full_failure_recovery(dataset, model_type, regularizations)
-#
-# dataset = 'boston'
-# model_type = 'linear_regression'
-# partial_failure_recovery(dataset, model_type, regularizations)
+w_diff_term_crit = 0.1
+learning_rate = 0.000001
+dataset = 'boston'
+model_type = 'linear_regression'
+full_failure_recovery(dataset, model_type, regularizations)
+
+dataset = 'boston'
+model_type = 'linear_regression'
+partial_failure_recovery(dataset, model_type, regularizations)
 
 
 print 'fully done'

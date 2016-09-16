@@ -41,7 +41,6 @@ def rewrite_input_data_from_parallel(input_d):
 
     # create sorted dictionary for different regularizations
     for el in input_d:
-        print el['regularization']
         reg_k = str(el['regularization'])
         if reg_k not in d_sorted.keys():
             d_sorted[reg_k] = {'iterations':[el['iterations']],

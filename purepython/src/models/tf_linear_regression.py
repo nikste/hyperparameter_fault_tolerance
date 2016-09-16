@@ -165,7 +165,7 @@ def train(x, y, x_test, y_test, learning_rate=0.005, max_iterations=1000000,
     # convergence criteria:
     # 5 consecutive error changes below threshold
     error_changes_past = [w_diff_term_crit, w_diff_term_crit, w_diff_term_crit, w_diff_term_crit,w_diff_term_crit]
-    for i in xrange(0,max_iterations):
+    for i in xrange(0, max_iterations):
 
         # loss_msq__, w__, b__,output__, loss__, _, regularization_penalty__ = sess.run([loss_msq, w, b, output, loss, opt, regularization_penalty], feed_dict={x_input: x, y_: y})
         #
