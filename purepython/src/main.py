@@ -117,19 +117,19 @@ regularizations = list(reversed([10., 1.,  0.1, 0.]))
 
 dataset = 'covertype'
 model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
+full_failure_recovery(dataset, model_type, regularizations)
 
 dataset = 'covertype'
 model_type = 'softmax_regression'
-partial_failure_recovery(dataset, model_type)
+partial_failure_recovery(dataset, model_type, regularizations)
 
 dataset = 'mnist'
 model_type = 'softmax_regression'
-full_failure_recovery(dataset, model_type)
+full_failure_recovery(dataset, model_type, regularizations)
 
 dataset = 'mnist'
 model_type = 'softmax_regression'
-partial_failure_recovery(dataset, model_type)
+partial_failure_recovery(dataset, model_type, regularizations)
 
 dataset = 'iris'
 model_type = 'softmax_regression'
